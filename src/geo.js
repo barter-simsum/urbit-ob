@@ -1,0 +1,252 @@
+const prefixes = [
+    "doz","mar","bin","wan","sam","lit","sig","hid","fid","lis","sog",
+    "dir","wac","sab","wis","sib","rig","sol","dop","mod","fog","lid","hop","dar",
+    "dor","lor","hod","fol","rin","tog","sil","mir","hol","pas","lac","rov","liv",
+    "dal","sat","lib","tab","han","tic","pid","tor","bol","fos","dot","los","dil",
+    "for","pil","ram","tir","win","tad","bic","dif","roc","wid","bis","das","mid",
+    "lop","ril","nar","dap","mol","san","loc","nov","sit","nid","tip","sic","rop",
+    "wit","nat","pan","min","rit","pod","mot","tam","tol","sav","pos","nap","nop",
+    "som","fin","fon","ban","mor","wor","sip","ron","nor","bot","wic","soc","wat",
+    "dol","mag","pic","dav","bid","bal","tim","tas","mal","lig","siv","tag","pad",
+    "sal","div","dac","tan","sid","fab","tar","mon","ran","nis","wol","mis","pal",
+    "las","dis","map","rab","tob","rol","lat","lon","nod","nav","fig","nom","nib",
+    "pag","sop","ral","bil","had","doc","rid","moc","pac","rav","rip","fal","tod",
+    "til","tin","hap","mic","fan","pat","tac","lab","mog","sim","son","pin","lom",
+    "ric","tap","fir","has","bos","bat","poc","hac","tid","hav","sap","lin","dib",
+    "hos","dab","bit","bar","rac","par","lod","dos","bor","toc","hil","mac","tom",
+    "dig","fil","fas","mit","hob","har","mig","hin","rad","mas","hal","rag","lag",
+    "fad","top","mop","hab","nil","nos","mil","fop","fam","dat","nol","din","hat",
+    "nac","ris","fot","rib","hoc","nim","lar","fit","wal","rap","sar","nal","mos",
+    "lan","don","dan","lad","dov","riv","bac","pol","lap","tal","pit","nam","bon",
+    "ros","ton","fod","pon","sov","noc","sor","lav","mat","mip","fip"
+];
+
+const suffixes = [
+    "zod","nec","bud","wes","sev","per","sut","let","ful","pen","syt",
+    "dur","wep","ser","wyl","sun","ryp","syx","dyr","nup","heb","peg","lup","dep",
+    "dys","put","lug","hec","ryt","tyv","syd","nex","lun","mep","lut","sep","pes",
+    "del","sul","ped","tem","led","tul","met","wen","byn","hex","feb","pyl","dul",
+    "het","mev","rut","tyl","wyd","tep","bes","dex","sef","wyc","bur","der","nep",
+    "pur","rys","reb","den","nut","sub","pet","rul","syn","reg","tyd","sup","sem",
+    "wyn","rec","meg","net","sec","mul","nym","tev","web","sum","mut","nyx","rex",
+    "teb","fus","hep","ben","mus","wyx","sym","sel","ruc","dec","wex","syr","wet",
+    "dyl","myn","mes","det","bet","bel","tux","tug","myr","pel","syp","ter","meb",
+    "set","dut","deg","tex","sur","fel","tud","nux","rux","ren","wyt","nub","med",
+    "lyt","dus","neb","rum","tyn","seg","lyx","pun","res","red","fun","rev","ref",
+    "mec","ted","rus","bex","leb","dux","ryn","num","pyx","ryg","ryx","fep","tyr",
+    "tus","tyc","leg","nem","fer","mer","ten","lus","nus","syl","tec","mex","pub",
+    "rym","tuc","fyl","lep","deb","ber","mug","hut","tun","byl","sud","pem","dev",
+    "lur","def","bus","bep","run","mel","pex","dyt","byt","typ","lev","myl","wed",
+    "duc","fur","fex","nul","luc","len","ner","lex","rup","ned","lec","ryd","lyd",
+    "fen","wel","nyd","hus","rel","rud","nes","hes","fet","des","ret","dun","ler",
+    "nyr","seb","hul","ryl","lud","rem","lys","fyn","wer","ryc","sug","nys","nyl",
+    "lyn","dyn","dem","lux","fed","sed","bec","mun","lyr","tes","mud","nyt","byr",
+    "sen","weg","fyr","mur","tel","rep","teg","pec","nel","nev","fes"
+];
+
+const geos = new Set();
+geos.add("circle");
+geos.add("square");
+geos.add("u");
+geos.add("revu");
+geos.add("rru");
+geos.add("lru");
+geos.add("upleaf");
+geos.add("downleaf");
+geos.add("c0");
+geos.add("c90");
+geos.add("c180");
+geos.add("c270");
+
+const geo_categories = {
+    "circle": (
+        ["doz", "mar", "sig", "sib", "rig", "sol", "dop", "hop", "dar", "fol", "hol", "lib",
+         "bol", "lop", "nar", "mol", "rop", "tol", "nop", "dol", "lig", "tar", "wol", "rol",
+         "sop", "hap", "tap", "dib", "bar", "par", "har", "top", "mop", "fop", "nol", "rib",
+         "lar", "sar", "pol", "nib"],
+        ["zod", "let", "ful", "sun", "lun", "sul", "ped", "tem", "led", "tul", "met", "dul",
+         "het", "pet", "rul", "sem", "net", "mul", "wet", "det", "bet", "set", "med", "red",
+         "ted", "nem", "pem", "wed", "nul", "ned", "fet", "ret", "hul", "rem", "dem", "fed",
+         "sed", "mun", "pun"]),
+    "square": (
+        ["bin", "rin", "pas", "rov", "liv", "win", "das", "nov", "min", "som", "fin", "sip",
+         "tas", "siv", "div", "las", "nom", "tin", "pin", "lom", "has", "lin", "tom", "fas",
+         "hin", "mas", "din", "dov", "riv", "sov"],
+        ["sut", "pen", "heb", "peg", "put", "lut", "wen", "feb", "rut", "reb", "den", "nut",
+         "reg", "meg", "web", "mut", "teb", "ben", "meb", "dut", "deg", "ren", "neb", "seg",
+         "leb", "leg", "deb", "hut", "len", "fen", "seb", "sen", "weg", "teg", "ten"]),
+    "u": (
+        [],
+        ["per", "dur", "ser", "der", "ter", "wer"]),
+    "revu": (
+        ["tob", "sim", "nim", "tim", "hob"],
+        ["fun", "tun"]),
+    "rru": (
+        [],
+        ["nup", "lug", "nex", "hex", "mev", "dex", "sup", "tev", "rex", "wex", "tug", "lyt",
+         "rev", "bex", "fer", "mer", "mex", "ber", "mug", "dev", "pex", "dyt", "byt", "lev",
+         "fex", "ner", "lex", "rup", "dun", "ler", "sug", "nyt", "nev", "sev", "syt", "lup",
+         "ryt", "tex", "wyt", "run"]),
+    "lru": (
+        ["sam", "mod", "dor", "lor", "hod", "tor", "dot", "dil", "for", "pil", "ram", "ril",
+         "pod", "mot", "tam", "sav", "mor", "wor", "nor", "bot", "mag", "dav", "tag", "ran",
+         "nod", "fig", "pag", "bil", "rip", "tod", "til", "fan", "lod", "bor", "hil", "dig",
+         "fil", "mig", "rag", "lag", "nil", "mil", "fam", "fot", "hoc", "lan", "dan", "nam",
+         "fod", "noc", "fip", "sor", "sil"],
+        []),
+    "upleaf": (
+        ["wit", "soc", "doc", "fal", "hal", "wal"],
+        ["dyr", "tyv", "del", "sel", "syr", "bel", "myr", "pel", "fel", "tyr", "mel", "wel",
+         "rel", "nyr", "lyr", "byr", "fyr", "tel", "nel"]),
+    "downleaf": (
+        ["lit", "dal", "rit", "bal", "mal", "sal", "pal", "ral", "poc", "rac", "toc", "mit",
+         "fit", "nal", "tal", "pit", "roc", "loc", "sit", "moc", "bit"],
+        ["syd", "wyd", "sef", "tyd", "ref", "def", "ryd", "lyd", "nyd"]),
+    "c0": (
+        ["lis", "mic", "ric", "rad", "pic"],
+        ["nec", "bud", "wyl", "dys", "pyl", "tyl", "wyc", "rys", "sub", "rec", "sec", "fus",
+         "hep", "mus", "ruc", "dyl", "mes", "tux", "sur", "tud", "nux", "rux", "nub", "dus",
+         "mec", "rus", "num", "fep", "tus", "tyc", "lus", "nus", "tec", "pub", "tuc", "lur",
+         "bus", "duc", "luc", "lec", "hus", "rud", "lud", "ryc", "nys", "bec", "mud", "mur",
+         "pec", "hec", "bes", "nep", "dec", "sud", "lys", "nyl"]),
+    "c90": (
+        ["fog", "tog", "fon", "wic", "mon", "nis", "mis", "dis", "map", "rab", "lab", "mog",
+         "ris", "don", "lad", "bon", "ton", "pon", "sog", "tip", "nap", "ron", "lon", "son",
+         "lav", "mip"],
+        ["wes", "wep", "dep", "mep", "sep", "pes", "res", "lep", "bep", "nes", "hes", "des",
+         "tes", "rep", "fes", "tep"]),
+    "c180": (
+        ["wan", "hid", "fid", "dir", "wac", "sab", "wis", "lid", "mir", "tab", "tic", "pid",
+         "los", "tir", "tad", "bic", "dif", "wid", "bis", "mid", "dap", "san", "nid", "sic",
+         "nat", "pan", "pos", "ban", "wat", "bid", "pad", "dac", "tan", "sid", "fab", "lat",
+         "nav", "rid", "rav", "pat", "tac", "fir", "bat", "hac", "tid", "hav", "sap", "hos",
+         "dab", "dos", "mac", "hab", "nos", "dat", "hat", "nac", "rap", "mos", "bac", "lap",
+         "ros", "mat", "lac", "sat", "pac", "bos"],
+        ["ryl"]
+    ),
+    "c270": (
+        ["han", "fos", "had", "fad"],
+        ["ryp", "syx", "byn", "bur", "syn", "wyn", "nym", "sum", "nyx", "wyx", "myn", "syp",
+         "rum", "tyn", "dux", "ryn", "pyx", "ryg", "ryx", "syl", "rym", "byl", "typ", "myl",
+         "fur", "fyn", "lyn", "dyn", "lux", "pur", "sym", "lyx", "fyl"]
+    ),
+};
+
+const prefix_geo = {
+    'bac': 'c180', 'bal': 'downleaf', 'ban': 'c180', 'bar': 'circle', 'bat': 'c180',
+    'bic': 'c180', 'bid': 'c180', 'bil': 'lru', 'bin': 'square', 'bis': 'c180',
+    'bit': 'downleaf', 'bol': 'circle', 'bon': 'c90', 'bor': 'lru', 'bos': 'c180',
+    'bot': 'lru', 'dab': 'c180', 'dac': 'c180', 'dal': 'downleaf', 'dan': 'lru',
+    'dap': 'c180', 'dar': 'circle', 'das': 'square', 'dat': 'c180', 'dav': 'lru',
+    'dib': 'circle', 'dif': 'c180', 'dig': 'lru', 'dil': 'lru', 'din': 'square',
+    'dir': 'c180', 'dis': 'c90', 'div': 'square', 'doc': 'upleaf', 'dol': 'circle',
+    'don': 'c90', 'dop': 'circle', 'dor': 'lru', 'dos': 'c180', 'dot': 'lru',
+    'dov': 'square', 'doz': 'circle', 'fab': 'c180', 'fad': 'c270', 'fal': 'upleaf',
+    'fam': 'lru', 'fan': 'lru', 'fas': 'square', 'fid': 'c180', 'fig': 'lru',
+    'fil': 'lru', 'fin': 'square', 'fip': 'lru', 'fir': 'c180', 'fit': 'downleaf',
+    'fod': 'lru', 'fog': 'c90', 'fol': 'circle', 'fon': 'c90', 'fop': 'circle',
+    'for': 'lru', 'fos': 'c270', 'fot': 'lru', 'hab': 'c180', 'hac': 'c180',
+    'had': 'c270', 'hal': 'upleaf', 'han': 'c270', 'hap': 'circle', 'har': 'circle',
+    'has': 'square', 'hat': 'c180', 'hav': 'c180', 'hid': 'c180', 'hil': 'lru',
+    'hin': 'square', 'hob': 'revu', 'hoc': 'lru', 'hod': 'lru', 'hol': 'circle',
+    'hop': 'circle', 'hos': 'c180', 'lab': 'c90', 'lac': 'c180', 'lad': 'c90',
+    'lag': 'lru', 'lan': 'lru', 'lap': 'c180', 'lar': 'circle', 'las': 'square',
+    'lat': 'c180', 'lav': 'c90', 'lib': 'circle', 'lid': 'c180', 'lig': 'circle',
+    'lin': 'square', 'lis': 'c0', 'lit': 'downleaf', 'liv': 'square', 'loc': 'downleaf',
+    'lod': 'lru', 'lom': 'square', 'lon': 'c90', 'lop': 'circle', 'lor': 'lru',
+    'los': 'c180', 'mac': 'c180', 'mag': 'lru', 'mal': 'downleaf', 'map': 'c90',
+    'mar': 'circle', 'mas': 'square', 'mat': 'c180', 'mic': 'c0', 'mid': 'c180',
+    'mig': 'lru', 'mil': 'lru', 'min': 'square', 'mip': 'c90', 'mir': 'c180',
+    'mis': 'c90', 'mit': 'downleaf', 'moc': 'downleaf', 'mod': 'lru', 'mog': 'c90',
+    'mol': 'circle', 'mon': 'c90', 'mop': 'circle', 'mor': 'lru', 'mos': 'c180',
+    'mot': 'lru', 'nac': 'c180', 'nal': 'downleaf', 'nam': 'lru', 'nap': 'c90',
+    'nar': 'circle', 'nat': 'c180', 'nav': 'c180', 'nib': 'circle', 'nid': 'c180',
+    'nil': 'lru', 'nim': 'revu', 'nis': 'c90', 'noc': 'lru', 'nod': 'lru',
+    'nol': 'circle', 'nom': 'square', 'nop': 'circle', 'nor': 'lru', 'nos': 'c180',
+    'nov': 'square', 'pac': 'c180', 'pad': 'c180', 'pag': 'lru', 'pal': 'downleaf',
+    'pan': 'c180', 'par': 'circle', 'pas': 'square', 'pat': 'c180', 'pic': 'c0',
+    'pid': 'c180', 'pil': 'lru', 'pin': 'square', 'pit': 'downleaf', 'poc': 'downleaf',
+    'pod': 'lru', 'pol': 'circle', 'pon': 'c90', 'pos': 'c180', 'rab': 'c90',
+    'rac': 'downleaf', 'rad': 'c0', 'rag': 'lru', 'ral': 'downleaf', 'ram': 'lru',
+    'ran': 'lru', 'rap': 'c180', 'rav': 'c180', 'rib': 'circle', 'ric': 'c0',
+    'rid': 'c180', 'rig': 'circle', 'ril': 'lru', 'rin': 'square', 'rip': 'lru',
+    'ris': 'c90', 'rit': 'downleaf', 'riv': 'square', 'roc': 'downleaf', 'rol': 'circle',
+    'ron': 'c90', 'rop': 'circle', 'ros': 'c180', 'rov': 'square', 'sab': 'c180',
+    'sal': 'downleaf', 'sam': 'lru', 'san': 'c180', 'sap': 'c180', 'sar': 'circle',
+    'sat': 'c180', 'sav': 'lru', 'sib': 'circle', 'sic': 'c180', 'sid': 'c180',
+    'sig': 'circle', 'sil': 'lru', 'sim': 'revu', 'sip': 'square', 'sit': 'downleaf',
+    'siv': 'square', 'soc': 'upleaf', 'sog': 'c90', 'sol': 'circle', 'som': 'square',
+    'son': 'c90', 'sop': 'circle', 'sor': 'lru', 'sov': 'square', 'tab': 'c180',
+    'tac': 'c180', 'tad': 'c180', 'tag': 'lru', 'tal': 'downleaf', 'tam': 'lru',
+    'tan': 'c180', 'tap': 'circle', 'tar': 'circle', 'tas': 'square', 'tic': 'c180',
+    'tid': 'c180', 'til': 'lru', 'tim': 'revu', 'tin': 'square', 'tip': 'c90',
+    'tir': 'c180', 'tob': 'revu', 'toc': 'downleaf', 'tod': 'lru', 'tog': 'c90',
+    'tol': 'circle', 'tom': 'square', 'ton': 'c90', 'top': 'circle', 'tor': 'lru',
+    'wac': 'c180', 'wal': 'upleaf', 'wan': 'c180', 'wat': 'c180', 'wic': 'c90',
+    'wid': 'c180', 'win': 'square', 'wis': 'c180', 'wit': 'upleaf', 'wol': 'circle',
+    'wor': 'lru'
+};
+
+const suffix_geo = {
+    'bec': 'c0', 'bel': 'upleaf', 'ben': 'square', 'bep': 'c90', 'ber': 'rru',
+    'bes': 'c0', 'bet': 'circle', 'bex': 'rru', 'bud': 'c0', 'bur': 'c270',
+    'bus': 'c0', 'byl': 'c270', 'byn': 'c270', 'byr': 'upleaf', 'byt': 'rru',
+    'deb': 'square', 'dec': 'c0', 'def': 'downleaf', 'deg': 'square', 'del': 'upleaf',
+    'dem': 'circle', 'den': 'square', 'dep': 'c90', 'der': 'u', 'des': 'c90',
+    'det': 'circle', 'dev': 'rru', 'dex': 'rru', 'duc': 'c0', 'dul': 'circle',
+    'dun': 'rru', 'dur': 'u', 'dus': 'c0', 'dut': 'square', 'dux': 'c270',
+    'dyl': 'c0', 'dyn': 'c270', 'dyr': 'upleaf', 'dys': 'c0', 'dyt': 'rru',
+    'feb': 'square', 'fed': 'circle', 'fel': 'upleaf', 'fen': 'square', 'fep': 'c0',
+    'fer': 'rru', 'fes': 'c90', 'fet': 'circle', 'fex': 'rru', 'ful': 'circle',
+    'fun': 'revu', 'fur': 'c270', 'fus': 'c0', 'fyl': 'c270', 'fyn': 'c270',
+    'fyr': 'upleaf', 'heb': 'square', 'hec': 'c0', 'hep': 'c0', 'hes': 'c90',
+    'het': 'circle', 'hex': 'rru', 'hul': 'circle', 'hus': 'c0', 'hut': 'square',
+    'leb': 'square', 'lec': 'c0', 'led': 'circle', 'leg': 'square', 'len': 'square',
+    'lep': 'c90', 'ler': 'rru', 'let': 'circle', 'lev': 'rru', 'lex': 'rru',
+    'luc': 'c0', 'lud': 'c0', 'lug': 'rru', 'lun': 'circle', 'lup': 'rru',
+    'lur': 'c0', 'lus': 'c0', 'lut': 'square', 'lux': 'c270', 'lyd': 'downleaf',
+    'lyn': 'c270', 'lyr': 'upleaf', 'lys': 'c0', 'lyt': 'rru', 'lyx': 'c270',
+    'meb': 'square', 'mec': 'c0', 'med': 'circle', 'meg': 'square', 'mel': 'upleaf',
+    'mep': 'c90', 'mer': 'rru', 'mes': 'c0', 'met': 'circle', 'mev': 'rru',
+    'mex': 'rru', 'mud': 'c0', 'mug': 'rru', 'mul': 'circle', 'mun': 'circle',
+    'mur': 'c0', 'mus': 'c0', 'mut': 'square', 'myl': 'c270', 'myn': 'c270',
+    'myr': 'upleaf', 'neb': 'square', 'nec': 'c0', 'ned': 'circle', 'nel': 'upleaf',
+    'nem': 'circle', 'nep': 'c0', 'ner': 'rru', 'nes': 'c90', 'net': 'circle',
+    'nev': 'rru', 'nex': 'rru', 'nub': 'c0', 'nul': 'circle', 'num': 'c0',
+    'nup': 'rru', 'nus': 'c0', 'nut': 'square', 'nux': 'c0', 'nyd': 'downleaf',
+    'nyl': 'c0', 'nym': 'c270', 'nyr': 'upleaf', 'nys': 'c0', 'nyt': 'rru',
+    'nyx': 'c270', 'pec': 'c0', 'ped': 'circle', 'peg': 'square', 'pel': 'upleaf',
+    'pem': 'circle', 'pen': 'square', 'per': 'u', 'pes': 'c90', 'pet': 'circle',
+    'pex': 'rru', 'pub': 'c0', 'pun': 'circle', 'pur': 'c270', 'put': 'square',
+    'pyl': 'c0', 'pyx': 'c270', 'reb': 'square', 'rec': 'c0', 'red': 'circle',
+    'ref': 'downleaf', 'reg': 'square', 'rel': 'upleaf', 'rem': 'circle', 'ren': 'square',
+    'rep': 'c90', 'res': 'c90', 'ret': 'circle', 'rev': 'rru', 'rex': 'rru',
+    'ruc': 'c0', 'rud': 'c0', 'rul': 'circle', 'rum': 'c270', 'run': 'rru',
+    'rup': 'rru', 'rus': 'c0', 'rut': 'square', 'rux': 'c0', 'ryc': 'c0',
+    'ryd': 'downleaf', 'ryg': 'c270', 'ryl': 'c180', 'rym': 'c270', 'ryn': 'c270',
+    'ryp': 'c270', 'rys': 'c0', 'ryt': 'rru', 'ryx': 'c270', 'seb': 'square',
+    'sec': 'c0', 'sed': 'circle', 'sef': 'downleaf', 'seg': 'square', 'sel': 'upleaf',
+    'sem': 'circle', 'sen': 'square', 'sep': 'c90', 'ser': 'u', 'set': 'circle',
+    'sev': 'rru', 'sub': 'c0', 'sud': 'c0', 'sug': 'rru', 'sul': 'circle',
+    'sum': 'c270', 'sun': 'circle', 'sup': 'rru', 'sur': 'c0', 'sut': 'square',
+    'syd': 'downleaf', 'syl': 'c270', 'sym': 'c270', 'syn': 'c270', 'syp': 'c270',
+    'syr': 'upleaf', 'syt': 'rru', 'syx': 'c270', 'teb': 'square', 'tec': 'c0',
+    'ted': 'circle', 'teg': 'square', 'tel': 'upleaf', 'tem': 'circle', 'ten': 'square',
+    'tep': 'c90', 'ter': 'u', 'tes': 'c90', 'tev': 'rru', 'tex': 'rru',
+    'tuc': 'c0', 'tud': 'c0', 'tug': 'rru', 'tul': 'circle', 'tun': 'revu',
+    'tus': 'c0', 'tux': 'c0', 'tyc': 'c0', 'tyd': 'downleaf', 'tyl': 'c0',
+    'tyn': 'c270', 'typ': 'c270', 'tyr': 'upleaf', 'tyv': 'upleaf', 'web': 'square',
+    'wed': 'circle', 'weg': 'square', 'wel': 'upleaf', 'wen': 'square', 'wep': 'c90',
+    'wer': 'u', 'wes': 'c90', 'wet': 'circle', 'wex': 'rru', 'wyc': 'c0',
+    'wyd': 'downleaf', 'wyl': 'c0', 'wyn': 'c270', 'wyt': 'rru', 'wyx': 'c270',
+    'zod': 'circle'
+};
+
+module.exports = {
+    geos,
+    prefixes,
+    suffixes,
+    geo_categories,
+    prefix_geo,
+    suffix_geo,
+};
